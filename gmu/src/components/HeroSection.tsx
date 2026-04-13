@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image */}
       <img
-        src={campusHero}
-        alt="GMNoteBook Learning Platform"
+        src="engineering_block.jpeg"
+        alt="GMNoteBook Engineering Block Background"
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 hero-overlay" />
