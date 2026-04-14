@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
+import { supabase } from "@/lib/supabase";
+
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -13,12 +15,73 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
+    if (!email || !password || !fullName) {
+      setError("Please fill in required fields.");
+      return;
+    }
+    
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            phone_number: phoneNumber,
+            college_name: collegeName,
+            department: department,
+            program: program,
+            semester: semester,
+            usn: usn,
+          }
+        }
+      });
+
+      if (signUpError) {
+        if (signUpError.message.toLowerCase().includes('rate limit')) {
+          setError("Rate limit hit: Supabase blocked this to prevent spam. Please go to your Supabase Dashboard -> Authentication -> Providers -> Email, and turn OFF 'Confirm email', then try again.");
+          setLoading(false);
+          return;
+        }
+        throw signUpError;
+      }
+      
+      // Explicitly insert into profiles table just in case the backend trigger is missing
+      if (data?.user) {
+        const { error: profileError } = await supabase.from('profiles').upsert({
+          id: data.user.id,
+          full_name: fullName,
+          phone_number: phoneNumber,
+          college_name: collegeName,
+          department: department,
+          program: program,
+          semester: semester,
+          usn: usn,
+          email: email
+        });
+        
+        if (profileError) {
+          console.error("Profile insert error:", profileError);
+        }
+      }
+
+      // Navigate to dashboard upon successful sign up.
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "An error occurred during sign up.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputClasses = "w-full px-4 py-3 rounded-xl bg-gray-50 border border-[#4C2424] text-gray-800 text-sm focus:outline-none focus:border-[#4C2424] focus:ring-1 focus:ring-[#4C2424] transition-all placeholder:text-gray-400";
@@ -38,6 +101,11 @@ const Signup = () => {
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl">
+              {error}
+            </div>
+          )}
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
@@ -175,9 +243,10 @@ const Signup = () => {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full gradient-gold hover:opacity-90 text-secondary-foreground font-bold py-3.5 rounded-xl shadow-card transition-all text-[15px]"
+              disabled={loading}
+              className="w-full gradient-gold hover:opacity-90 text-secondary-foreground font-bold py-3.5 rounded-xl shadow-card transition-all text-[15px] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Create Free Account
+              {loading ? "Creating Account..." : "Create Free Account"}
             </button>
           </div>
         </form>
