@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { supabase } from "@/lib/supabase";
+import { ArrowLeft } from "lucide-react";
 
 
 const Signup = () => {
@@ -88,7 +89,15 @@ const Signup = () => {
   const labelClasses = "text-[11px] font-bold text-gray-500 mb-1.5 block uppercase tracking-wider";
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 font-sans relative">
+      <Link 
+        to="/" 
+        className="absolute top-8 left-8 flex items-center gap-2 text-gray-500 hover:text-[#6b1016] transition-colors font-semibold"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span>Back to Home</span>
+      </Link>
+
       <div className="w-full max-w-xl bg-white p-8 md:p-10 rounded-2xl shadow-sm border-2 border-[#4C2424]">
         
         <div className="text-center mb-8">

@@ -1,6 +1,9 @@
-import { BookOpen, Brain, Mic, BarChart3, Settings, Home, LogOut } from "lucide-react";
+import { BookOpen, Brain, Mic, BarChart3, Settings, Home, LogOut, User, ChevronRight, ChevronLeft } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import {
   Sidebar,
   SidebarContent,
@@ -14,35 +17,39 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const mainItems = [
-  { title: "Overview", url: "/dashboard", icon: Home },
-  { title: "Notes", url: "/dashboard/notes", icon: BookOpen },
-  { title: "Assessments", url: "/dashboard/assessments", icon: Brain },
-  { title: "Mock Interviews", url: "/dashboard/interviews", icon: Mic },
-  { title: "Progress", url: "/dashboard/progress", icon: BarChart3 },
-];
+const mainItems: any[] = [];
 
 const bottomItems = [
+  { title: "Profile", url: "/dashboard/profile", icon: User },
   { title: "Settings", url: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardSidebar() {
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) =>
     path === "/dashboard"
       ? location.pathname === "/dashboard"
       : location.pathname.startsWith(path);
 
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast.success("Signed out successfully");
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground text-xs uppercase tracking-wider">
-            {!collapsed && "Menu"}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainItems.map((item) => (
@@ -51,10 +58,10 @@ export function DashboardSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/dashboard"}
-                      className="flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors hover:bg-muted/50"
-                      activeClassName="bg-primary/10 text-primary font-medium"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-300 hover:bg-[#c08d4c]/10 text-[#0f172a]/70 hover:text-[#0f172a]"
+                      activeClassName="bg-gradient-to-r from-[#c08d4c]/20 to-transparent text-[#0f172a] font-bold border-l-4 border-[#c08d4c] shadow-sm"
                     >
-                      <item.icon className="h-4 w-4 shrink-0" />
+                      <item.icon className="h-5 w-5 shrink-0 text-[#c08d4c]" />
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
@@ -72,24 +79,31 @@ export function DashboardSidebar() {
               <SidebarMenuButton asChild>
                 <NavLink
                   to={item.url}
-                  className="flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors hover:bg-muted/50"
-                  activeClassName="bg-primary/10 text-primary font-medium"
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-300 hover:bg-[#c08d4c]/10 text-[#0f172a] font-semibold"
+                  activeClassName="bg-gradient-to-r from-[#c08d4c]/20 to-transparent text-[#0f172a] font-bold border-l-4 border-[#c08d4c]"
                 >
-                  <item.icon className="h-4 w-4 shrink-0" />
+                  <item.icon className="h-5 w-5 shrink-0 text-[#4a2e19]" />
                   {!collapsed && <span>{item.title}</span>}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <NavLink
-                to="/"
-                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-destructive transition-colors hover:bg-destructive/10"
-              >
-                <LogOut className="h-4 w-4 shrink-0" />
-                {!collapsed && <span>Back to Home</span>}
-              </NavLink>
+            <SidebarMenuButton 
+              onClick={handleSignOut}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-[#0f172a] font-semibold transition-all duration-300 hover:bg-destructive/10"
+            >
+              <LogOut className="h-5 w-5 shrink-0 text-[#4a2e19]" />
+              {!collapsed && <span>Sign Out</span>}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={() => toggleSidebar()}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-300 hover:bg-[#c08d4c]/10 text-[#0f172a] font-semibold"
+            >
+              {collapsed ? <ChevronRight className="h-5 w-5 text-[#4a2e19]" /> : <ChevronLeft className="h-5 w-5 text-[#4a2e19]" />}
+              {!collapsed && <span className="italic">Collapse Bar</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

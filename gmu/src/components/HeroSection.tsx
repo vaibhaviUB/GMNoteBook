@@ -1,16 +1,43 @@
-import campusHero from "@/assets/campus-hero.png";
+import { useState, useEffect } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import campusHero from "@/assets/campus-hero.png";
+import aiLearningBg from "@/assets/ai-learning-bg.png";
 
 const HeroSection = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const images = [
+    "engineering_block.jpeg",
+    "ai_study_notes.png",
+    "adaptive_assessment.png",
+    aiLearningBg
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image */}
-      <img
-        src="engineering_block.jpeg"
-        alt="GMNoteBook Engineering Block Background"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {/* Background Carousel */}
+      {images.map((img, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === currentImageIndex ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <img
+            src={img}
+            alt={`Background ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ))}
       <div className="absolute inset-0 hero-overlay" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
