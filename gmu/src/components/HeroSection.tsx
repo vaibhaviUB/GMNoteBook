@@ -9,36 +9,55 @@ const HeroSection = () => {
 
   const images = [
     "engineering_block.jpeg",
-    "ai_study_notes.png",
-    "adaptive_assessment.png",
-    aiLearningBg
+    "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1517842645767-c639042777db?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=2070",
+    "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=2070"
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, [images.length]);
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Carousel */}
-      {images.map((img, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <img
-            src={img}
-            alt={`Background ${index + 1}`}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ))}
+    <section className="relative h-[calc(100vh-5rem)] flex items-center overflow-hidden">
+      {/* Background Carousel Container */}
+      <div 
+        className="absolute inset-0 flex transition-transform duration-1000 ease-in-out"
+        style={{ 
+          transform: `translateX(-${currentImageIndex * 100}%)`
+        }}
+      >
+        {images.map((img, index) => (
+          <div key={index} className="min-w-full h-full relative">
+            <img
+              src={img}
+              alt={`Background ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
+      
       <div className="absolute inset-0 hero-overlay" />
+
+      {/* Carousel Indicators (Dots) */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentImageIndex(index)}
+            className={`transition-all duration-300 rounded-full ${
+              index === currentImageIndex 
+                ? "w-8 h-2.5 bg-gold" 
+                : "w-2.5 h-2.5 bg-white/40 hover:bg-white/60"
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
         <div className="max-w-2xl animate-fade-up">
