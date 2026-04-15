@@ -1,4 +1,4 @@
-import { BookOpen, Brain, Mic, BarChart3, TrendingUp, Clock, Target, Flame } from "lucide-react";
+import { BookOpen, Brain, Mic, BarChart3, TrendingUp, Clock, Target, Flame, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -15,6 +15,7 @@ const quickActions = [
   { title: "Assessments", description: "Take adaptive quizzes", icon: Brain, to: "/dashboard/assessments", gradient: "from-emerald-500/10 to-emerald-600/5" },
   { title: "Mock Interviews", description: "Practice with AI interviewer", icon: Mic, to: "/dashboard/interviews", gradient: "from-purple-500/10 to-purple-600/5" },
   { title: "Progress", description: "View your analytics", icon: BarChart3, to: "/dashboard/progress", gradient: "from-orange-500/10 to-orange-600/5" },
+  { title: "Profile", description: "View your student profile", icon: User, to: "/dashboard/profile", gradient: "from-gold-500/10 to-gold-600/5" },
 ];
 
 const recentActivity = [

@@ -10,9 +10,9 @@ const Navbar = () => {
     <nav className="w-full z-30 nav-bg sticky top-0 border-b border-[#3b1c1c]">
       <div className="max-w-7xl mx-auto px-6 py-4 lg:py-5 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 shrink-0">
-          <img src={logo} alt="GMNoteBook Logo" className="w-11 h-11 rounded-full object-cover bg-white shadow-sm" />
-          <span className="text-2xl font-display font-bold text-gold">GMNoteBook</span>
+        <Link to="/" className="inline-flex items-center gap-2">
+          <img src={logo} alt="GMNoteBook Logo" className="w-10 h-10 rounded-full object-cover shadow-sm bg-white" />
+          <span className="text-xl font-display font-bold text-gold">GMNoteBook</span>
         </Link>
 
         {/* Desktop links */}

@@ -13,6 +13,7 @@ import Notes from "./pages/dashboard/Notes.tsx";
 import Assessments from "./pages/dashboard/Assessments.tsx";
 import Interviews from "./pages/dashboard/Interviews.tsx";
 import ProgressPage from "./pages/dashboard/ProgressPage.tsx";
+import Profile from "./pages/dashboard/Profile.tsx";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="assessments" element={<Assessments />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="progress" element={<ProgressPage />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
