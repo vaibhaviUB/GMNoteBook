@@ -37,18 +37,22 @@ const DashboardLayout = () => {
         <header className="h-16 flex items-center gap-3 border-b border-border px-6 bg-card sticky top-0 z-50 w-full shrink-0">
           <div className="flex items-center gap-3 flex-1 overflow-hidden">
             <Link to="/dashboard" className="flex items-center gap-2 mr-8 shrink-0">
-              <img src={logo} alt="GMNoteBook" className="w-7 h-7 object-contain" />
+              <div className="w-7 h-7 rounded-full overflow-hidden bg-white shadow-sm flex items-center justify-center shrink-0">
+                <img src={logo} alt="GMNoteBook" className="w-full h-full object-cover" />
+              </div>
               <span className="font-display font-bold text-foreground text-lg whitespace-nowrap hidden sm:inline-block">GMNoteBook</span>
             </Link>
 
             {/* Topbar Navigation */}
             <nav className="hidden lg:flex items-center gap-8 overflow-x-auto no-scrollbar">
               {[
-                { title: "Overview", url: "/dashboard" },
+                { title: "Dashboard", url: "/dashboard" },
                 { title: "Notes", url: "/dashboard/notes" },
-                { title: "Assessments", url: "/dashboard/assessments" },
-                { title: "Mock Interviews", url: "/dashboard/interviews" },
-                { title: "Progress", url: "/dashboard/progress" },
+                { title: "Test", url: "/dashboard/test" },
+                { title: "AI Assistant", url: "/dashboard/assistant" },
+                { title: "Resources", url: "/dashboard/Resources" },
+                { title: "Career Buddy", url: "/dashboard/career" },
+                { title: "Planner", url: "/dashboard/planner" },
               ].map((item) => (
                 <Link
                   key={item.title}

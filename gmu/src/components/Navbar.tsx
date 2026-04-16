@@ -11,7 +11,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 lg:py-5 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="inline-flex items-center gap-2">
-          <img src={logo} alt="GMNoteBook Logo" className="w-10 h-10 rounded-full object-cover shadow-sm bg-white" />
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm flex items-center justify-center shrink-0">
+            <img src={logo} alt="GMNoteBook Logo" className="w-full h-full object-cover" />
+          </div>
           <span className="text-xl font-display font-bold text-gold">GMNoteBook</span>
         </Link>
 
@@ -55,6 +57,10 @@ const Navbar = () => {
           <a href="#how-it-works" className="text-sm text-primary-foreground/80 hover:text-gold py-2">How It Works</a>
           <a href="#testimonials" className="text-sm text-primary-foreground/80 hover:text-gold py-2">Testimonials</a>
           <a href="#contact" className="text-sm text-primary-foreground/80 hover:text-gold py-2">Contact</a>
+          <Link to="/dashboard" className="text-sm text-primary-foreground/80 hover:text-gold py-2">Dashboard</Link>
+          <Link to="/resource" className="text-sm text-primary-foreground/80 hover:text-gold py-2">Resource</Link>
+          <Link to="/planner" className="text-sm text-primary-foreground/80 hover:text-gold py-2">Planner</Link>
+          <Link to="/career-buddy" className="text-sm text-primary-foreground/80 hover:text-gold py-2">Career Buddy</Link>
           <div className="flex gap-3 pt-2">
             <Link to="/login" className="flex-1 text-center text-sm font-semibold text-gold border border-secondary/40 px-4 py-2 rounded-md">Log In</Link>
             <Link to="/signup" className="flex-1 text-center text-sm font-semibold gradient-gold text-secondary-foreground px-4 py-2 rounded-md">Sign Up</Link>
