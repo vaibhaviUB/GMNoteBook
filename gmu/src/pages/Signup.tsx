@@ -102,7 +102,9 @@ const Signup = () => {
         
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <img src={logo} alt="GMNoteBook Logo" className="w-10 h-10 rounded-full object-cover shadow-sm bg-white" />
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm flex items-center justify-center shrink-0">
+              <img src={logo} alt="GMNoteBook Logo" className="w-full h-full object-cover" />
+            </div>
             <span className="text-xl font-display font-bold text-gold">GMNoteBook</span>
           </Link>
           <h1 className="text-2xl font-display font-bold text-gray-900">Create Your Account</h1>
