@@ -74,9 +74,23 @@ const Signup = () => {
         if (profileError) {
           console.error("Profile insert error:", profileError);
         }
+
+        // Check if user got a session (auto-login successful)
+        if (data.session) {
+          // User is logged in, redirect to dashboard
+          navigate("/dashboard");
+          return;
+        }
+
+        // If no session, check email verification status
+        if (data.user.user_metadata?.email_verified === false || !data.session) {
+          setError("Sign up successful! However, email confirmation is enabled. Go to your Supabase Dashboard → Authentication → Providers → Email, and turn OFF 'Confirm email'. Then sign up again.");
+          setLoading(false);
+          return;
+        }
       }
 
-      // Navigate to dashboard upon successful sign up.
+      // Fallback: navigate to dashboard
       navigate("/dashboard");
     } catch (err: any) {
       setError(err.message || "An error occurred during sign up.");

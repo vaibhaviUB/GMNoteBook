@@ -24,28 +24,71 @@ const Profile = () => {
   async function getProfile() {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-      if (user) {
-        setEmail(user.email || null);
-        const { data, error, status } = await supabase
-          .from('profiles')
-          .select(`*`)
-          .eq('id', user.id)
-          .single();
+      if (authError) {
+        console.error('Error fetching user authentication details:', authError.message);
+        return;
+      }
 
-        if (error && status !== 406) {
-          throw error;
-        }
+      if (!user) {
+        console.warn('No user is logged in.');
+        navigate('/login');
+        return;
+      }
 
-        if (data) {
-          setProfileData(data);
-          setEditedData(data);
-          setAvatarUrl(data.avatar_url);
-        }
+      console.log('Logged-in user ID:', user.id);
+      setEmail(user.email || null);
+      
+      const { data, error, status } = await supabase
+        .from('profiles')
+        .select(`full_name, usn, college_name, department, program, semester, phone_number`)
+        .eq('id', user.id)
+        .single();
+
+      console.log('Profile query result:', { data, error, status });
+
+      // Handle errors
+      if (error) {
+        console.error('Error fetching profile data:', error.message, 'Status:', status);
+        // Initialize with empty data if profile doesn't exist yet
+        const emptyProfile = {
+          full_name: null,
+          usn: null,
+          college_name: null,
+          department: null,
+          program: null,
+          semester: null,
+          phone_number: null
+        };
+        setProfileData(emptyProfile);
+        setEditedData(emptyProfile);
+        return;
+      }
+
+      // If we got data, set it
+      if (data) {
+        console.log('Successfully fetched profile data:', data);
+        setProfileData(data);
+        setEditedData(data);
+      } else {
+        // No error but no data - initialize empty
+        console.log('No profile data found, initializing empty profile');
+        const emptyProfile = {
+          full_name: null,
+          usn: null,
+          college_name: null,
+          department: null,
+          program: null,
+          semester: null,
+          phone_number: null
+        };
+        setProfileData(emptyProfile);
+        setEditedData(emptyProfile);
       }
     } catch (error: any) {
-      console.error('Error loading user data!', error.message);
+      console.error('Unexpected error loading user data:', error.message);
+      toast.error('An unexpected error occurred while loading user data.');
     } finally {
       setLoading(false);
     }
@@ -64,7 +107,7 @@ const Profile = () => {
           department: editedData.department,
           college_name: editedData.college_name,
           usn: editedData.usn,
-          semester: editedData.semester,
+          program: editedData.program,
           phone_number: editedData.phone_number,
         })
         .eq('id', user.id);
@@ -85,7 +128,7 @@ const Profile = () => {
     { key: "usn", label: "USN / Roll Number", value: profileData?.usn || "NOT SET", icon: IdCard },
     { key: "department", label: "Discipline", value: profileData?.department || "NOT SET", icon: GraduationCap },
     { key: "college_name", label: "Institution", value: profileData?.college_name || "NOT SET", icon: Briefcase },
-    { key: "semester", label: "Section / Semester", value: profileData?.semester || "NOT SET", icon: Users },
+    { key: "program", label: "Section / Semester", value: profileData?.program || "NOT SET", icon: Users },
     { key: "email", label: "Email ID", value: email || "Loading...", icon: Mail, readonly: true },
     { key: "phone_number", label: "Phone Number", value: profileData?.phone_number || "NOT SET", icon: Phone },
   ];
@@ -163,7 +206,7 @@ const Profile = () => {
 
       <div className="px-6 relative">
         {/* Profile Card */}
-        <div className="mt-8 mb-10 rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-[#c08d4c] via-[#a67a42] to-[#4a2e19] p-10 flex flex-col items-center text-white shadow-[0_20px_50px_rgba(192,141,76,0.3)] border border-white/10 relative group transition-all duration-500 hover:shadow-[0_25px_60px_rgba(192,141,76,0.4)]">
+        <div className="mt-8 mb-10 rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-[#c08d4c] via-[#a67a42] to-[#4a2e19] p-10 flex flex-col items-center text-white shadow-[0_20px_50px_rgba(192,141,76,0.3)] border border-white/10 relative group transition-all duration-500 hover:shadow-[0_25px_60px_rgba(192,144,76,0.4)]">
           
           <div className="absolute top-6 right-6">
             {isEditing && (

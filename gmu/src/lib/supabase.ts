@@ -8,3 +8,36 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl || "", supabaseAnonKey || "")
+
+// Function to add a note to the database
+export async function addNote(userId: string, title: string, content: string) {
+  try {
+    const { data, error } = await supabase
+      .from('notes')
+      .insert([
+        { user_id: userId, title, content, created_at: new Date().toISOString() },
+      ]);
+
+    if (error) throw error;
+    return data;
+  } catch (error: any) {
+    console.error('Error adding note:', error.message);
+    throw error;
+  }
+}
+
+// Function to fetch notes for a specific user
+export async function fetchNotes(userId: string) {
+  try {
+    const { data, error } = await supabase
+      .from('notes')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return data;
+  } catch (error: any) {
+    console.error('Error fetching notes:', error.message);
+    throw error;
+  }
+}

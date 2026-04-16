@@ -1,33 +1,32 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 const DashboardLayout = () => {
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const location = useLocation();
 
   useEffect(() => {
-    getProfile();
+    // Removed avatar-related functionality
   }, []);
 
   async function getProfile() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data, error, status } = await supabase
+        const { error, status } = await supabase
           .from('profiles')
-          .select(`avatar_url`)
+          .select(`id`) // Removed avatar_url
           .eq('id', user.id)
           .single();
 
         if (error && status !== 406) throw error;
-        if (data) setAvatarUrl(data.avatar_url);
       }
     } catch (error: any) {
-      console.error('Error loading avatar!', error.message);
+      console.error('Error loading profile!', error.message);
     }
   }
 
@@ -53,15 +52,22 @@ const DashboardLayout = () => {
                 { title: "Resources", url: "/dashboard/Resources" },
                 { title: "Career Buddy", url: "/dashboard/career" },
                 { title: "Planner", url: "/dashboard/planner" },
-              ].map((item) => (
-                <Link
-                  key={item.title}
-                  to={item.url}
-                  className="text-sm font-semibold text-[#0f172a]/60 hover:text-[#c08d4c] transition-all duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-[#c08d4c] py-5"
-                >
-                  {item.title}
-                </Link>
-              ))}
+              ].map((item) => {
+                const isActive = location.pathname === item.url;
+                return (
+                  <Link
+                    key={item.title}
+                    to={item.url}
+                    className={`text-sm font-semibold transition-all duration-200 whitespace-nowrap border-b-2 py-5 ${
+                      isActive 
+                        ? 'text-[#c08d4c] border-[#c08d4c]' 
+                        : 'text-[#0f172a]/60 border-transparent hover:text-[#c08d4c] hover:border-[#c08d4c]'
+                    }`}
+                  >
+                    {item.title}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 
@@ -70,7 +76,7 @@ const DashboardLayout = () => {
             <div className="relative">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#c08d4c]/30 bg-muted flex items-center justify-center hover:border-[#c08d4c] transition-colors duration-300 shadow-sm">
                 <img 
-                  src={avatarUrl || "/vector_avatar.png"} 
+                  src="/vector_avatar.png" 
                   alt="User Profile" 
                   className="w-full h-full object-cover"
                 />
