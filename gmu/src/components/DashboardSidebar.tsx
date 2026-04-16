@@ -17,7 +17,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const mainItems: any[] = [];
+const mainItems = [
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Notes", url: "/dashboard/notes", icon: BookOpen },
+  { title: "Assessments", url: "/dashboard/assessments", icon: Brain },
+  { title: "Progress", url: "/dashboard/progress", icon: BarChart3 },
+];
 
 const bottomItems = [
   { title: "Profile", url: "/dashboard/profile", icon: User },

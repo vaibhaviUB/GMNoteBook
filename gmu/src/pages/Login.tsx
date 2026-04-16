@@ -2,17 +2,56 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { ArrowLeft } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
+    
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        throw signInError;
+      }
+
+      if (data.user) {
+        toast.success("Logged in successfully!");
+        navigate("/dashboard");
+      }
+    } catch (err: any) {
+      const errorMsg = err.message || "An error occurred during login.";
+      setError(errorMsg);
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearError = () => {
+    setError("");
+    setEmail("");
+    setPassword("");
   };
 
   const inputClasses = "w-full px-4 py-3 rounded-xl bg-gray-50 border border-[#4C2424] text-gray-800 text-sm focus:outline-none focus:border-[#4C2424] focus:ring-1 focus:ring-[#4C2424] transition-all placeholder:text-gray-400";
@@ -70,20 +109,39 @@ const Login = () => {
               </button>
             </div>
           </div>
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-start justify-between">
+                <p className="text-red-700 text-sm flex-1">{error}</p>
+                <button
+                  type="button"
+                  onClick={clearError}
+                  className="text-red-700 hover:text-red-900 font-bold text-lg ml-2"
+                >
+                  ×
+                </button>
+              </div>
+              <p className="text-red-600 text-xs mt-2">
+                If you haven't signed up yet, click "Sign Up" below to create a new account.
+              </p>
+            </div>
+          )}
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full gradient-gold hover:opacity-90 text-secondary-foreground font-bold py-3.5 rounded-xl shadow-card transition-all text-[15px]"
+              disabled={loading}
+              className="w-full gradient-gold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-secondary-foreground font-bold py-3.5 rounded-xl shadow-card transition-all text-[15px]"
             >
-              Log In
+              {loading ? "Logging In..." : "Log In"}
             </button>
           </div>
         </form>
 
-        <p className="text-center text-[13px] text-gray-600 mt-6">
-          Don't have an account?{" "}
-          <Link to="/signup" className="text-gold font-semibold hover:underline transition-all">Sign Up</Link>
-        </p>
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <p className="text-center text-gray-700 font-semibold mb-3">
+            Don't have an account? <Link to="/signup" className="text-gold font-bold hover:underline">Sign Up</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
