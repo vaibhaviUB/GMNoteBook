@@ -1,0 +1,105 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-soft: var(--soft);
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.985 0.003 220);
+  --foreground: oklch(0.2 0.02 30);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.02 30);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.02 30);
+
+  /* Brand: maroon #4C2424 */
+  --brand: oklch(0.29 0.07 25);
+  --brand-foreground: oklch(0.98 0.01 80);
+
+  /* Gold accent */
+  --gold: oklch(0.78 0.15 75);
+  --gold-foreground: oklch(0.25 0.05 40);
+
+  --primary: oklch(0.29 0.07 25);
+  --primary-foreground: oklch(0.98 0.01 80);
+
+  --secondary: oklch(0.965 0.004 220);
+  --secondary-foreground: oklch(0.29 0.07 25);
+
+  --muted: oklch(0.96 0.004 220);
+  --muted-foreground: oklch(0.5 0.02 40);
+
+  --accent: oklch(0.95 0.005 220);
+  --accent-foreground: oklch(0.27 0.05 35);
+
+  /* Soft surface — neutral light gray, matches login/signup background */
+  --soft: oklch(0.97 0.003 220);
+
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.9 0.01 60);
+  --input: oklch(0.9 0.01 60);
+  --ring: oklch(0.78 0.15 75);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    font-family: var(--font-sans);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+}
+
+.prose-note h2 { font-size: 1.25rem; font-weight: 700; margin: 0.5rem 0; font-family: var(--font-display); }
+.prose-note p { margin: 0.4rem 0; }
+.prose-note ul { list-style: disc; padding-left: 1.25rem; margin: 0.4rem 0; }
+.prose-note ol { list-style: decimal; padding-left: 1.25rem; margin: 0.4rem 0; }
+.prose-note pre { background: var(--soft); padding: 0.6rem 0.8rem; border-radius: 0.5rem; font-family: ui-monospace, monospace; font-size: 0.8rem; overflow-x: auto; margin: 0.5rem 0; }
+.prose-note code { background: var(--soft); padding: 0.1rem 0.35rem; border-radius: 0.25rem; font-family: ui-monospace, monospace; font-size: 0.85em; }
+.prose-note img { max-width: 100%; border-radius: 0.5rem; margin: 0.5rem 0; }
+.prose-note b, .prose-note strong { font-weight: 700; }
+.prose-note i, .prose-note em { font-style: italic; }
